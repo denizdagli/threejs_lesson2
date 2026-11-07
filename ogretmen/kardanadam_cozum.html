@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Sekiller Dunyasi</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+  </style>
+</head>
+<body>
+
+<script src="three.min.js"></script>
+
+<script>
+  // ---- Ders 1'den tanidik: sahne, kamera, cizici ----
+  const sahne = new THREE.Scene();
+  sahne.background = new THREE.Color(0x0b1d3a);
+
+  const kamera = new THREE.PerspectiveCamera(
+    75, window.innerWidth / window.innerHeight, 0.1, 1000
+  );
+  kamera.position.set(0, 2, 10);   // x, y, z: biraz yukarida ve geride
+  kamera.lookAt(0, 0, 0);          // sahnenin ortasina bak
+
+  const cizici = new THREE.WebGLRenderer();
+  cizici.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(cizici.domElement);
+
+  // ---- KARDAN ADAM: uc kure ust uste ----
+  const malzeme = new THREE.MeshNormalMaterial();
+
+  const govde = new THREE.Mesh(new THREE.SphereGeometry(1.2, 32, 32), malzeme);
+  govde.position.y = -0.8;
+  sahne.add(govde);
+
+  const orta = new THREE.Mesh(new THREE.SphereGeometry(0.9, 32, 32), malzeme);
+  orta.position.y = 1.0;
+  sahne.add(orta);
+
+  const kafa = new THREE.Mesh(new THREE.SphereGeometry(0.6, 32, 32), malzeme);
+  kafa.position.y = 2.3;
+  sahne.add(kafa);
+
+  // Sapka: koni
+  const sapka = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1, 32), malzeme);
+  sapka.position.y = 3.2;
+  sahne.add(sapka);
+
+  const zeminMalzeme = new THREE.MeshBasicMaterial({ color: 0x4a6cf7, wireframe: true });
+  const zemin = new THREE.Mesh(new THREE.PlaneGeometry(20, 20, 20, 20), zeminMalzeme);
+  zemin.rotation.x = -Math.PI / 2;
+  zemin.position.y = -2;
+  sahne.add(zemin);
+
+  function ciz() {
+    requestAnimationFrame(ciz);
+    cizici.render(sahne, kamera);
+  }
+  ciz();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Sekiller Dunyasi</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+  </style>
+</head>
+<body>
+
+<script src="three.min.js"></script>
+
+<script>
+  // ---- Ders 1'den tanidik: sahne, kamera, cizici ----
+  const sahne = new THREE.Scene();
+  sahne.background = new THREE.Color(0x0b1d3a);
+
+  const kamera = new THREE.PerspectiveCamera(
+    75, window.innerWidth / window.innerHeight, 0.1, 1000
+  );
+  kamera.position.set(0, 2, 10);   // x, y, z: biraz yukarida ve geride
+  kamera.lookAt(0, 0, 0);          // sahnenin ortasina bak
+
+  const cizici = new THREE.WebGLRenderer();
+  cizici.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(cizici.domElement);
+
+  // ---- Her nesne icin ayni malzeme ----
+  const malzeme = new THREE.MeshNormalMaterial();
+
+  // ---- 1) KUP ----
+  const kup = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), malzeme);
+  kup.position.x = -4.5;           // sola koy
+  sahne.add(kup);
+
+  // ---- 2) KURE ----
+  const kure = new THREE.Mesh(new THREE.SphereGeometry(1.2, 32, 32), malzeme);
+  kure.position.x = -1.5;
+  sahne.add(kure);
+
+  // ---- 3) SILINDIR ----
+  const silindir = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 2.5, 32), malzeme);
+  silindir.position.x = 1.5;
+  sahne.add(silindir);
+
+  // ---- 4) HALKA ----
+  const halka = new THREE.Mesh(new THREE.TorusGeometry(1, 0.4, 16, 48), malzeme);
+  halka.position.x = 4.5;
+  sahne.add(halka);
+
+  // ---- 5) ZEMIN (duz bir levha, tel kafes) ----
+  const zeminMalzeme = new THREE.MeshBasicMaterial({ color: 0x4a6cf7, wireframe: true });
+  const zemin = new THREE.Mesh(new THREE.PlaneGeometry(20, 20, 20, 20), zeminMalzeme);
+  zemin.rotation.x = -Math.PI / 2;   // levhayi yere yatir
+  zemin.position.y = -2;             // asagiya indir
+  sahne.add(zemin);
+
+  // ---- Animasyon ----
+  function ciz() {
+    requestAnimationFrame(ciz);
+    kup.rotation.y += 0.01;
+    kure.rotation.y += 0.01;
+    silindir.rotation.y += 0.01;
+    halka.rotation.x += 0.02;
+    cizici.render(sahne, kamera);
+  }
+  ciz();
+</script>
+
+</body>
+</html>
